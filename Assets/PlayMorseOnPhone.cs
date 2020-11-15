@@ -5,7 +5,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-public class ImageRecgonition : MonoBehaviour
+public class PlayMorseOnPhone : MonoBehaviour
 {
 
     private ARTrackedImageManager _arTrackedImageManager;
