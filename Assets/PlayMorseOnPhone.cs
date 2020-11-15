@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
@@ -7,9 +8,12 @@ using UnityEngine.XR.ARSubsystems;
 
 public class PlayMorseOnPhone : MonoBehaviour
 {
-
+    [SerializeField]
+    private GameObject[] placablePrefabs;
     private ARTrackedImageManager _arTrackedImageManager;
     private AudioSource audioSource;
+
+    private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
     private bool audioPlaying;
 
@@ -19,6 +23,12 @@ public class PlayMorseOnPhone : MonoBehaviour
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         Debug.Log( "Unity script is awoken");
         //audioSource.Play();
+        foreach(GameObject prefab in placablePrefabs)
+        {
+            GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            newPrefab.name = prefab.name;
+            spawnedPrefabs.Add(prefab.name, newPrefab);
+        }
     }
 
     public void OnEnable()
@@ -39,32 +49,57 @@ public class PlayMorseOnPhone : MonoBehaviour
     {
         //Debug.Log( "Image changed");
                 // for each tracked image that has been added
-        foreach (var addedImage in args.added)
+        foreach (ARTrackedImage addedImage in args.added)
         {
-            audioSource.Play();
-            Debug.Log( "Image added");
-            audioPlaying = true;
+            Debug.Log("Image added");
+            Debug.Log(addedImage.referenceImage.name);
+            if (addedImage.referenceImage.name != "phone")
+            {
+                UpdateImage(addedImage);
+            }
+            else
+            {
+                audioSource.Play();
+                audioPlaying = true;
+            }
+          
 
         }
 
         // for each tracked image that has been updated
-        foreach (var updated in args.updated)
+        foreach (var updatedImage in args.updated)
         {
-           // //throw tracked image to check tracking state
-         UpdateTrackedObject(updated);
-           //Debug.Log( "Image updated");
+            if (updatedImage.referenceImage.name != "phone")
+            {
+                UpdateImage(updatedImage);
+            }
+            else
+            {
+                UpdateSound(updatedImage);
+            }
+               
         }
 
         // for each tracked image that has been removed  
-        foreach (var trackedImage in args.removed)
+        foreach (var removedImage in args.removed)
         {
-            Debug.Log( "Image destroyed");
-            // destroy the AR object associated with the tracked image
-            //Destroy(trackedImage.gameObject);
+            spawnedPrefabs[removedImage.name].SetActive(false);
         }
     }
 
-        private void UpdateTrackedObject(ARTrackedImage trackedImage)
+    private void UpdateImage(ARTrackedImage trackedImage)
+    {
+        string name = trackedImage.referenceImage.name;
+        Vector3 position = trackedImage.transform.position;
+
+        GameObject prefab = spawnedPrefabs[name];
+        prefab.transform.position = position;
+        prefab.SetActive(true);
+
+
+    }
+
+    private void UpdateSound(ARTrackedImage trackedImage)
     {
         //if tracked image tracking state is comparable to tracking
         if (trackedImage.trackingState != TrackingState.Tracking)

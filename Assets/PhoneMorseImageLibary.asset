@@ -25,3 +25,13 @@ MonoBehaviour:
     m_SpecifySize: 0
     m_Name: phone
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5188495192327751407
+      m_GuidHigh: 10128266283790741386
+    m_SerializedTextureGuid:
+      m_GuidLow: 4761559200191404520
+      m_GuidHigh: 16333297504111879642
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: King
+    m_Texture: {fileID: 0}
