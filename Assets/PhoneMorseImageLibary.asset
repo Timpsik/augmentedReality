@@ -35,3 +35,23 @@ MonoBehaviour:
     m_SpecifySize: 0
     m_Name: King
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4675758485504267082
+      m_GuidHigh: 4238257337564236931
+    m_SerializedTextureGuid:
+      m_GuidLow: 14336350829460482197
+      m_GuidHigh: 8166590548710039048
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: Jack
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4814716322249185235
+      m_GuidHigh: 7193461942186136740
+    m_SerializedTextureGuid:
+      m_GuidLow: 17020432100803474205
+      m_GuidHigh: 3159194528135186984
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: Queen
+    m_Texture: {fileID: 0}
