@@ -6,7 +6,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-public class PlayMorseOnPhone : MonoBehaviour
+public class ImageTrackingScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] placablePrefabs;
