@@ -22,61 +22,67 @@ public class ImageTrackingScript : MonoBehaviour
         audioSource = FindObjectOfType<AudioSource>();
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         Debug.Log( "Unity script is awoken");
-        //audioSource.Play();
         foreach(GameObject prefab in placablePrefabs)
         {
             GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             newPrefab.name = prefab.name;
             spawnedPrefabs.Add(prefab.name, newPrefab);
+            newPrefab.SetActive(false);
         }
     }
 
     public void OnEnable()
     {
         _arTrackedImageManager.trackedImagesChanged += OnImageChanged;
-        Debug.Log( "Unity script is in onEnable");
-        //audioSource.Play();
     }
 
     public void OnDisable()
     {
         _arTrackedImageManager.trackedImagesChanged -= OnImageChanged;
-        Debug.Log( "Unity script is in onDisable");
         audioSource.Stop();
     }
 
     public void OnImageChanged(ARTrackedImagesChangedEventArgs args)
     {
-        //Debug.Log( "Image changed");
-                // for each tracked image that has been added
+
+        // for each tracked image that has been added
         foreach (ARTrackedImage addedImage in args.added)
         {
-            Debug.Log("Image added");
-            Debug.Log(addedImage.referenceImage.name);
-            if (addedImage.referenceImage.name != "phone")
-            {
-                UpdateImage(addedImage);
-            }
-            else
-            {
-                audioSource.Play();
-                audioPlaying = true;
-            }
-          
+
+                
+                
+          switch (addedImage.referenceImage.name)
+      {
+          case "phone":
+              UpdateSound(addedImage);
+              break;
+          case "Maze":
+          case "Caesar":
+              UpdateTemporaryObject(addedImage);
+              break;
+          default:
+              UpdateImage(addedImage);
+              break;
+      }
 
         }
 
         // for each tracked image that has been updated
         foreach (var updatedImage in args.updated)
         {
-            if (updatedImage.referenceImage.name != "phone")
-            {
-                UpdateImage(updatedImage);
-            }
-            else
-            {
-                UpdateSound(updatedImage);
-            }
+            switch (updatedImage.referenceImage.name)
+      {
+          case "phone":
+              UpdateSound(updatedImage);
+              break;
+          case "Maze":
+          case "Caesar":
+              UpdateTemporaryObject(updatedImage);
+              break;
+          default:
+              UpdateImage(updatedImage);
+              break;
+      }
                
         }
 
@@ -106,17 +112,39 @@ public class ImageTrackingScript : MonoBehaviour
         {
             //deactivate the image tracked ar object 
             if( audioPlaying) {
-            Debug.Log("Stopping audio");
-           audioSource.Stop();
-           audioPlaying = false;
+                Debug.Log("Stopping audio");
+                audioSource.Stop();
+                audioPlaying = false;
             }
 
         } else if (trackedImage.trackingState == TrackingState.Tracking) {
             if(!audioPlaying) {
-            Debug.Log("Restarting audio");
-           audioSource.Play();
-           audioPlaying = true;
+                Debug.Log("Restarting audio");
+                audioSource.Play();
+                audioPlaying = true;
             }
+        }
+    }
+
+        private void UpdateTemporaryObject(ARTrackedImage trackedImage)
+    {
+        string name = trackedImage.referenceImage.name;
+        
+        Vector3 position = trackedImage.transform.position;
+
+        GameObject spawnedObject = spawnedPrefabs[name];
+        
+        //if tracked image tracking state is comparable to tracking
+        if (trackedImage.trackingState == TrackingState.Tracking)
+        {
+            //set the image tracked ar object to active 
+            spawnedObject.SetActive(true);
+            spawnedObject.transform.position = trackedImage.transform.position;
+            spawnedObject.transform.rotation = trackedImage.transform.localRotation;
+        }
+        else //if tracked image tracking state is limited or none 
+        {
+            spawnedObject.SetActive(false);
         }
     }
 
