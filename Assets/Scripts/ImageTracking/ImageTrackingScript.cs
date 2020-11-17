@@ -5,13 +5,21 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using TMPro;
 
 public class ImageTrackingScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] placablePrefabs;
+
+    [SerializeField]
+    private TextMeshProUGUI timer;
     private ARTrackedImageManager _arTrackedImageManager;
     private AudioSource audioSource;
+
+    private int minutes = 60;
+    private int seconds = 0;
+    private bool takingAway = false;
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
@@ -22,6 +30,7 @@ public class ImageTrackingScript : MonoBehaviour
         audioSource = FindObjectOfType<AudioSource>();
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         Debug.Log( "Unity script is awoken");
+        timer.enabled = false;
         foreach(GameObject prefab in placablePrefabs)
         {
             GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
@@ -60,6 +69,9 @@ public class ImageTrackingScript : MonoBehaviour
           case "Caesar":
               UpdateTemporaryObject(addedImage);
               break;
+            case "Timer":
+              UpdateTimerDisplay(addedImage);
+              break;
           default:
               UpdateImage(addedImage);
               break;
@@ -78,6 +90,9 @@ public class ImageTrackingScript : MonoBehaviour
           case "Maze":
           case "Caesar":
               UpdateTemporaryObject(updatedImage);
+              break;
+          case "Timer":
+              UpdateTimerDisplay(updatedImage);
               break;
           default:
               UpdateImage(updatedImage);
@@ -145,6 +160,53 @@ public class ImageTrackingScript : MonoBehaviour
         else //if tracked image tracking state is limited or none 
         {
             spawnedObject.SetActive(false);
+        }
+    }
+    
+
+    IEnumerator TimerTake() {
+        takingAway = true;
+        yield return new WaitForSecondsRealtime(1);
+        if (seconds != 0) {
+        seconds -= 1;
+        } else if (minutes > 0) {
+            minutes -= 1;
+            seconds = 59;
+        } 
+        if (seconds == 0 && minutes == 0) {
+            timer.text = "You died";
+            timer.fontSize = 100;
+            timer.enabled = true;
+        } else {
+        timer.text = GetTimeString(minutes) + ":" + GetTimeString(seconds);
+        takingAway = false;
+        }
+    }
+
+    private string GetTimeString(int time) {
+        if (time < 10) {
+            return "0" + time;
+        }
+        return "" + time;
+    }
+
+    void Update() {
+        if (takingAway == false && (seconds > 0 || minutes > 0)) {
+            StartCoroutine(TimerTake());
+        }
+    }
+
+    private void UpdateTimerDisplay(ARTrackedImage trackedImage) {
+        if (trackedImage.trackingState != TrackingState.Tracking)
+        {
+            // hide the countdown timer
+            if( seconds > 0 || minutes > 0) {
+             timer.enabled = false;
+            }
+
+        } else if (trackedImage.trackingState == TrackingState.Tracking) {
+            // show the countdown timer
+                timer.enabled = true;
         }
     }
 

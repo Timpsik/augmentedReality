@@ -5,15 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/HomeScreen.unity
     guid: f7ade33781f13924980091f2b7c0ab10
-  - enabled: 0
-    path: Assets/Scenes/VideoOnFace.unity
-    guid: 2c844df718e915c499dfe8da467543af
   - enabled: 1
     path: Assets/Scenes/ARImageTracking.unity
     guid: 5d0b7d5ec0feea440921c49d3c543fd9
+  - enabled: 1
+    path: Assets/Scenes/VideoOnFace.unity
+    guid: 2c844df718e915c499dfe8da467543af
   - enabled: 0
     path: Assets/Scenes/EnterCode.unity
     guid: a39ccb884b7720f4fa0079582920161e
