@@ -29,9 +29,8 @@ public class ImageTrackingScript : MonoBehaviour
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
-    private bool audioPlaying;
-    string[] Monarchs = { "Ceasar", "ElizabethII", "HenryVII", "JamesVI","WilliamI","Maze" };
-    string[] maps = { "Netherlands", "Japan","SouthAfrica","Morocco" };
+    string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI", "Maze" };
+    string[] maps = { "Netherlands", "Japan", "SouthAfrica", "Morocco" };
     string currentCountry = "Netherlands";
 
     private void Awake()
@@ -66,19 +65,24 @@ public class ImageTrackingScript : MonoBehaviour
     {
 
         // for each tracked image that has been added
-    foreach (ARTrackedImage addedImage in args.added)
-    {
-        name = addedImage.referenceImage.name;
-            if (name == "Phone")
+        foreach (ARTrackedImage addedImage in args.added)
+        {
+            name = addedImage.referenceImage.name;
+            if (name == "Phone" || name == "Chicken")
             {
                 UpdateSound(addedImage);
-     
-            } else if (name == "Timer")
+
+            }
+            else if (name == "Timer")
             {
                 UpdateTimerDisplay(addedImage);
-            } else if (maps.Contains(name)) {
+            }
+            else if (maps.Contains(name))
+            {
                 CheckMapOrder(addedImage);
-            } else if (Monarchs.Contains(name)) {
+            }
+            else if (monarchs.Contains(name))
+            {
                 UpdateTemporaryObject(addedImage);
             }
             else
@@ -89,10 +93,10 @@ public class ImageTrackingScript : MonoBehaviour
         }
 
         // for each tracked image that has been updated
-    foreach (var updatedImage in args.updated)
-    {
+        foreach (var updatedImage in args.updated)
+        {
             name = updatedImage.referenceImage.name;
-            if (name == "Phone")
+            if (name == "Phone" || name == "Chicken")
             {
                 UpdateSound(updatedImage);
             }
@@ -103,11 +107,12 @@ public class ImageTrackingScript : MonoBehaviour
             else if (maps.Contains(name))
             {
                 CheckMapOrder(updatedImage);
-        } else if (Monarchs.Contains(name))
-        {
-            UpdateTemporaryObject(updatedImage);
-        }
-        else
+            }
+            else if (monarchs.Contains(name))
+            {
+                UpdateTemporaryObject(updatedImage);
+            }
+            else
             {
                 UpdateImage(updatedImage);
             }
@@ -130,7 +135,8 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 SpawnPrefab("Symbol", addedImage.transform.position);
             }
-            else {
+            else
+            {
                 SpawnPrefab("Plane", addedImage.transform.position);
                 currentCountry = maps[index + 1];
             }
@@ -163,7 +169,7 @@ public class ImageTrackingScript : MonoBehaviour
             //deactivate the image tracked ar object 
             if (trackedImage.referenceImage.name == "Phone")
             {
-                
+
                 if (morseCode.isPlaying)
                 {
                     Debug.Log("Stopping morse");
@@ -172,7 +178,7 @@ public class ImageTrackingScript : MonoBehaviour
             }
             else
             {
-                
+
                 if (chicken.isPlaying)
                 {
                     Debug.Log("Stopping chicken");

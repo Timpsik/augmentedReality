@@ -124,14 +124,6 @@ MonoBehaviour:
     m_Size: {x: 0.082499996, y: 0.10999999}
     m_SpecifySize: 1
     m_Name: SouthAfrica
-      m_GuidLow: 4652678938035063881
-      m_GuidHigh: 318536098931739070
-    m_SerializedTextureGuid:
-      m_GuidLow: 16006959852342113202
-      m_GuidHigh: 2465967810839945224
-    m_Size: {x: 0.2, y: 0.28529412}
-    m_SpecifySize: 1
-    m_Name: ElizabethII
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
       m_GuidLow: 5187623186192047377
@@ -172,4 +164,14 @@ MonoBehaviour:
     m_Size: {x: 0.2, y: 0.26666668}
     m_SpecifySize: 1
     m_Name: Chicken
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5612530341475385842
+      m_GuidHigh: 2421840630637932161
+    m_SerializedTextureGuid:
+      m_GuidLow: 16006959852342113202
+      m_GuidHigh: 2465967810839945224
+    m_Size: {x: 0.2, y: 0.28529412}
+    m_SpecifySize: 1
+    m_Name: ElizabethII
     m_Texture: {fileID: 0}

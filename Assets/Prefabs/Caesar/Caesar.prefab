@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649660922179144787}
   m_Layer: 0
-  m_Name: ParentToCaesar
+  m_Name: Caesar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
