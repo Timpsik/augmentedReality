@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class ImageTrackingScript : MonoBehaviour
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
     private bool audioPlaying;
+    string[] maps = { "Netherlands", "Japan","SouthAfrica","Morocco" };
+    string currentCountry = "Netherlands";
 
     private void Awake()
     {
@@ -55,50 +58,58 @@ public class ImageTrackingScript : MonoBehaviour
     {
 
         // for each tracked image that has been added
-        foreach (ARTrackedImage addedImage in args.added)
-        {
-
-                
-                
-          switch (addedImage.referenceImage.name)
-      {
-          case "phone":
-              UpdateSound(addedImage);
-              break;
-          case "Maze":
-          case "Caesar":
-              UpdateTemporaryObject(addedImage);
-              break;
-            case "Timer":
-              UpdateTimerDisplay(addedImage);
-              break;
-          default:
-              UpdateImage(addedImage);
-              break;
-      }
+    foreach (ARTrackedImage addedImage in args.added)
+    {
+        name = addedImage.referenceImage.name;
+            if (name == "phone")
+            {
+                UpdateSound(addedImage);
+            }
+            else if (name == "Maze" | name == "Ceasar")
+            {
+                UpdateTemporaryObject(addedImage);
+            }else if (name == "Timer")
+            {
+                UpdateTimerDisplay(addedImage);
+            }else if (maps.Contains("name")){
+                CheckMapOrder(addedImage);
+            }
+            else
+            {
+                UpdateImage(addedImage);
+            }
 
         }
 
         // for each tracked image that has been updated
-        foreach (var updatedImage in args.updated)
-        {
-            switch (updatedImage.referenceImage.name)
-      {
-          case "phone":
-              UpdateSound(updatedImage);
-              break;
-          case "Maze":
-          case "Caesar":
-              UpdateTemporaryObject(updatedImage);
-              break;
-          case "Timer":
-              UpdateTimerDisplay(updatedImage);
-              break;
-          default:
-              UpdateImage(updatedImage);
-              break;
-      }
-               
+    foreach (var updatedImage in args.updated)
+    {
+            name = updatedImage.referenceImage.name;
+            Debug.Log(maps.Contains("Japan"));
+            Debug.Log(maps.Contains("Netherlands"));
+            Debug.Log(maps.Contains(name));
+            Debug.Log(name);
+            if (name == "phone")
+            {
+                UpdateSound(updatedImage);
+            }
+            else if (name == "Maze" | name == "Ceasar")
+            {
+                UpdateTemporaryObject(updatedImage);
+            }
+            else if (name == "Timer")
+            {
+                UpdateTimerDisplay(updatedImage);
+            }
+            else if (maps.Contains(name))
+            {
+                CheckMapOrder(updatedImage);
+            }
+            else
+            {
+                UpdateImage(updatedImage);
+            }
+
         }
 
         // for each tracked image that has been removed  
@@ -108,16 +119,38 @@ public class ImageTrackingScript : MonoBehaviour
         }
     }
 
+    private void CheckMapOrder(ARTrackedImage addedImage)
+    {
+        if (addedImage.referenceImage.name == currentCountry)
+        {
+            int index = Array.IndexOf(maps, name);
+            if (index == (maps.Length - 1))
+            {
+                SpawnPrefab("Symbol", addedImage.transform.position);
+            }
+            else {
+                SpawnPrefab("Plane", addedImage.transform.position);
+                currentCountry = maps[index + 1];
+            }
+        }
+    }
+
     private void UpdateImage(ARTrackedImage trackedImage)
     {
         string name = trackedImage.referenceImage.name;
+        Debug.Log("Found");
+        Debug.Log(name);
         Vector3 position = trackedImage.transform.position;
+        SpawnPrefab(name, position);
 
+
+    }
+
+    private void SpawnPrefab(string name, Vector3 position)
+    {
         GameObject prefab = spawnedPrefabs[name];
         prefab.transform.position = position;
         prefab.SetActive(true);
-
-
     }
 
     private void UpdateSound(ARTrackedImage trackedImage)

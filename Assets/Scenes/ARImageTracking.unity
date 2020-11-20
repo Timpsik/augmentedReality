@@ -717,6 +717,8 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 97ac120cae0037e4b88dbc8c84606462, type: 3}
   - {fileID: 4714743522822459217, guid: 4a635a60346c654469cb7f594a9b05ed, type: 3}
   - {fileID: 3388522140712929665, guid: c7ebc00c4a766c34597659578c15a509, type: 3}
+  - {fileID: 919132149155446097, guid: 62e6abbd21020344a9e8ec71d00324b3, type: 3}
+  - {fileID: 919132149155446097, guid: 2c29942cd659c5a41a9f5d6dd11b81d4, type: 3}
   timer: {fileID: 1548305174}
 --- !u!1 &1047431911
 GameObject:
