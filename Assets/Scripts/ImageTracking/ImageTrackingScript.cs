@@ -16,7 +16,12 @@ public class ImageTrackingScript : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI timer;
     private ARTrackedImageManager _arTrackedImageManager;
-    private AudioSource audioSource;
+
+    [SerializeField]
+    private AudioSource morseCode;
+
+    [SerializeField]
+    private AudioSource chicken;
 
     private int minutes = 60;
     private int seconds = 0;
@@ -25,18 +30,20 @@ public class ImageTrackingScript : MonoBehaviour
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
     private bool audioPlaying;
+    string[] Monarchs = { "Ceasar", "ElizabethII", "HenryVII", "JamesVI","WilliamI","Maze" };
     string[] maps = { "Netherlands", "Japan","SouthAfrica","Morocco" };
     string currentCountry = "Netherlands";
 
     private void Awake()
     {
-        audioSource = FindObjectOfType<AudioSource>();
+        morseCode = FindObjectOfType<AudioSource>();
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
-        Debug.Log( "Unity script is awoken");
+        Debug.Log("Unity script is awoken");
         timer.enabled = false;
-        foreach(GameObject prefab in placablePrefabs)
+        foreach (GameObject prefab in placablePrefabs)
         {
             GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            Debug.Log("Adding " + prefab.name + " to creatable objects.");
             newPrefab.name = prefab.name;
             spawnedPrefabs.Add(prefab.name, newPrefab);
             newPrefab.SetActive(false);
@@ -51,7 +58,8 @@ public class ImageTrackingScript : MonoBehaviour
     public void OnDisable()
     {
         _arTrackedImageManager.trackedImagesChanged -= OnImageChanged;
-        audioSource.Stop();
+        morseCode.Stop();
+        chicken.Stop();
     }
 
     public void OnImageChanged(ARTrackedImagesChangedEventArgs args)
@@ -61,18 +69,17 @@ public class ImageTrackingScript : MonoBehaviour
     foreach (ARTrackedImage addedImage in args.added)
     {
         name = addedImage.referenceImage.name;
-            if (name == "phone")
+            if (name == "Phone")
             {
                 UpdateSound(addedImage);
-            }
-            else if (name == "Maze" | name == "Ceasar")
-            {
-                UpdateTemporaryObject(addedImage);
-            }else if (name == "Timer")
+     
+            } else if (name == "Timer")
             {
                 UpdateTimerDisplay(addedImage);
-            }else if (maps.Contains("name")){
+            } else if (maps.Contains(name)) {
                 CheckMapOrder(addedImage);
+            } else if (Monarchs.Contains(name)) {
+                UpdateTemporaryObject(addedImage);
             }
             else
             {
@@ -85,17 +92,9 @@ public class ImageTrackingScript : MonoBehaviour
     foreach (var updatedImage in args.updated)
     {
             name = updatedImage.referenceImage.name;
-            Debug.Log(maps.Contains("Japan"));
-            Debug.Log(maps.Contains("Netherlands"));
-            Debug.Log(maps.Contains(name));
-            Debug.Log(name);
-            if (name == "phone")
+            if (name == "Phone")
             {
                 UpdateSound(updatedImage);
-            }
-            else if (name == "Maze" | name == "Ceasar")
-            {
-                UpdateTemporaryObject(updatedImage);
             }
             else if (name == "Timer")
             {
@@ -104,8 +103,11 @@ public class ImageTrackingScript : MonoBehaviour
             else if (maps.Contains(name))
             {
                 CheckMapOrder(updatedImage);
-            }
-            else
+        } else if (Monarchs.Contains(name))
+        {
+            UpdateTemporaryObject(updatedImage);
+        }
+        else
             {
                 UpdateImage(updatedImage);
             }
@@ -159,29 +161,58 @@ public class ImageTrackingScript : MonoBehaviour
         if (trackedImage.trackingState != TrackingState.Tracking)
         {
             //deactivate the image tracked ar object 
-            if( audioPlaying) {
-                Debug.Log("Stopping audio");
-                audioSource.Stop();
-                audioPlaying = false;
+            if (trackedImage.referenceImage.name == "Phone")
+            {
+                
+                if (morseCode.isPlaying)
+                {
+                    Debug.Log("Stopping morse");
+                    morseCode.Stop();
+                }
+            }
+            else
+            {
+                
+                if (chicken.isPlaying)
+                {
+                    Debug.Log("Stopping chicken");
+                    chicken.Stop();
+                }
             }
 
-        } else if (trackedImage.trackingState == TrackingState.Tracking) {
-            if(!audioPlaying) {
-                Debug.Log("Restarting audio");
-                audioSource.Play();
-                audioPlaying = true;
+
+        }
+        else if (trackedImage.trackingState == TrackingState.Tracking)
+        {
+            if (trackedImage.referenceImage.name == "Phone")
+            {
+                Debug.Log("Recognized morse");
+                if (!morseCode.isPlaying)
+                {
+                    Debug.Log("Playing morse");
+                    morseCode.Play();
+                }
+            }
+            else
+            {
+                Debug.Log("Recognized chicken");
+                if (!chicken.isPlaying)
+                {
+                    Debug.Log("Playing chicken");
+                    chicken.Play();
+                }
             }
         }
     }
 
-        private void UpdateTemporaryObject(ARTrackedImage trackedImage)
+    private void UpdateTemporaryObject(ARTrackedImage trackedImage)
     {
         string name = trackedImage.referenceImage.name;
-        
-        Vector3 position = trackedImage.transform.position;
 
+        Vector3 position = trackedImage.transform.position;
+        Debug.Log(name);
         GameObject spawnedObject = spawnedPrefabs[name];
-        
+        Debug.Log(spawnedObject.name);
         //if tracked image tracking state is comparable to tracking
         if (trackedImage.trackingState == TrackingState.Tracking)
         {
@@ -195,51 +226,66 @@ public class ImageTrackingScript : MonoBehaviour
             spawnedObject.SetActive(false);
         }
     }
-    
 
-    IEnumerator TimerTake() {
+
+    IEnumerator TimerTake()
+    {
         takingAway = true;
         yield return new WaitForSecondsRealtime(1);
-        if (seconds != 0) {
-        seconds -= 1;
-        } else if (minutes > 0) {
+        if (seconds != 0)
+        {
+            seconds -= 1;
+        }
+        else if (minutes > 0)
+        {
             minutes -= 1;
             seconds = 59;
-        } 
-        if (seconds == 0 && minutes == 0) {
+        }
+        if (seconds == 0 && minutes == 0)
+        {
             timer.text = "You died";
             timer.fontSize = 100;
             timer.enabled = true;
-        } else {
-        timer.text = GetTimeString(minutes) + ":" + GetTimeString(seconds);
-        takingAway = false;
+        }
+        else
+        {
+            timer.text = GetTimeString(minutes) + ":" + GetTimeString(seconds);
+            takingAway = false;
         }
     }
 
-    private string GetTimeString(int time) {
-        if (time < 10) {
+    private string GetTimeString(int time)
+    {
+        if (time < 10)
+        {
             return "0" + time;
         }
         return "" + time;
     }
 
-    void Update() {
-        if (takingAway == false && (seconds > 0 || minutes > 0)) {
+    void Update()
+    {
+        if (takingAway == false && (seconds > 0 || minutes > 0))
+        {
             StartCoroutine(TimerTake());
         }
     }
 
-    private void UpdateTimerDisplay(ARTrackedImage trackedImage) {
+    private void UpdateTimerDisplay(ARTrackedImage trackedImage)
+    {
         if (trackedImage.trackingState != TrackingState.Tracking)
         {
             // hide the countdown timer
-            if( seconds > 0 || minutes > 0) {
-             timer.enabled = false;
+            if (seconds > 0 || minutes > 0)
+            {
+                timer.enabled = false;
             }
 
-        } else if (trackedImage.trackingState == TrackingState.Tracking) {
+        }
+        else if (trackedImage.trackingState == TrackingState.Tracking)
+        {
             // show the countdown timer
-                timer.enabled = true;
+            timer.enabled = true;
         }
     }
 

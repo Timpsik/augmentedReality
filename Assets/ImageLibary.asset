@@ -23,7 +23,7 @@ MonoBehaviour:
       m_GuidHigh: 3984799616375674011
     m_Size: {x: 0.2, y: 0.20140846}
     m_SpecifySize: 1
-    m_Name: phone
+    m_Name: Phone
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
       m_GuidLow: 5188495192327751407
@@ -124,4 +124,52 @@ MonoBehaviour:
     m_Size: {x: 0.082499996, y: 0.10999999}
     m_SpecifySize: 1
     m_Name: SouthAfrica
+      m_GuidLow: 4652678938035063881
+      m_GuidHigh: 318536098931739070
+    m_SerializedTextureGuid:
+      m_GuidLow: 16006959852342113202
+      m_GuidHigh: 2465967810839945224
+    m_Size: {x: 0.2, y: 0.28529412}
+    m_SpecifySize: 1
+    m_Name: ElizabethII
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5187623186192047377
+      m_GuidHigh: 923509922032787610
+    m_SerializedTextureGuid:
+      m_GuidLow: 16060983601054305100
+      m_GuidHigh: 14584217523433197464
+    m_Size: {x: 0.2, y: 0.2}
+    m_SpecifySize: 1
+    m_Name: HenryVII
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4912767238722713996
+      m_GuidHigh: 6073174191786902664
+    m_SerializedTextureGuid:
+      m_GuidLow: 13426525987793142087
+      m_GuidHigh: 9875293436362152954
+    m_Size: {x: 0.2, y: 0.27616668}
+    m_SpecifySize: 1
+    m_Name: JamesVI
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5570627200586322948
+      m_GuidHigh: 12276576633516784258
+    m_SerializedTextureGuid:
+      m_GuidLow: 10327999180558598952
+      m_GuidHigh: 17505943387368386553
+    m_Size: {x: 0.2, y: 0.28166667}
+    m_SpecifySize: 1
+    m_Name: WilliamI
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5504876132797993335
+      m_GuidHigh: 6977920213890259895
+    m_SerializedTextureGuid:
+      m_GuidLow: 9593863727001395371
+      m_GuidHigh: 16911941880082113768
+    m_Size: {x: 0.2, y: 0.26666668}
+    m_SpecifySize: 1
+    m_Name: Chicken
     m_Texture: {fileID: 0}
