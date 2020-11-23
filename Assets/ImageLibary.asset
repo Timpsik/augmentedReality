@@ -175,3 +175,13 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: ElizabethII
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4964474300083875004
+      m_GuidHigh: 15765052831678344105
+    m_SerializedTextureGuid:
+      m_GuidLow: 13219281315984151512
+      m_GuidHigh: 1253258085788225114
+    m_Size: {x: 0.2, y: 0.1975}
+    m_SpecifySize: 1
+    m_Name: cookie
+    m_Texture: {fileID: 0}

@@ -15,6 +15,9 @@ public class ImageTrackingScript : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI timer;
+
+    [SerializeField]
+    private Camera arCamera; 
     private ARTrackedImageManager _arTrackedImageManager;
 
     [SerializeField]
@@ -23,19 +26,25 @@ public class ImageTrackingScript : MonoBehaviour
     [SerializeField]
     private AudioSource chicken;
 
+        [SerializeField]
+    private GameObject fortuneCookie;
+
     private int minutes = 60;
     private int seconds = 0;
     private bool takingAway = false;
 
+    private bool cookieEaten = false;
+    private bool cookieActive = true;
+
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
-    string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI", "Maze" };
+    string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI", "Maze"};
     string[] maps = { "Netherlands", "Japan", "SouthAfrica", "Morocco" };
     string currentCountry = "Netherlands";
 
     private void Awake()
     {
-        morseCode = FindObjectOfType<AudioSource>();
+
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         Debug.Log("Unity script is awoken");
         timer.enabled = false;
@@ -47,6 +56,8 @@ public class ImageTrackingScript : MonoBehaviour
             spawnedPrefabs.Add(prefab.name, newPrefab);
             newPrefab.SetActive(false);
         }
+        fortuneCookie = Instantiate(fortuneCookie, Vector3.zero, Quaternion.identity);
+        fortuneCookie.SetActive(false);
     }
 
     public void OnEnable()
@@ -85,6 +96,10 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 UpdateTemporaryObject(addedImage);
             }
+            else if (name == "cookie")
+            {
+                UpdateCookieObject(addedImage);
+            }
             else
             {
                 UpdateImage(addedImage);
@@ -111,6 +126,10 @@ public class ImageTrackingScript : MonoBehaviour
             else if (monarchs.Contains(name))
             {
                 UpdateTemporaryObject(updatedImage);
+            }
+            else if (name == "cookie")
+            {
+                UpdateCookieObject(updatedImage);
             }
             else
             {
@@ -146,8 +165,7 @@ public class ImageTrackingScript : MonoBehaviour
     private void UpdateImage(ARTrackedImage trackedImage)
     {
         string name = trackedImage.referenceImage.name;
-        Debug.Log("Found");
-        Debug.Log(name);
+        Debug.Log("Found " + name);
         Vector3 position = trackedImage.transform.position;
         SpawnPrefab(name, position);
 
@@ -192,7 +210,6 @@ public class ImageTrackingScript : MonoBehaviour
         {
             if (trackedImage.referenceImage.name == "Phone")
             {
-                Debug.Log("Recognized morse");
                 if (!morseCode.isPlaying)
                 {
                     Debug.Log("Playing morse");
@@ -201,7 +218,6 @@ public class ImageTrackingScript : MonoBehaviour
             }
             else
             {
-                Debug.Log("Recognized chicken");
                 if (!chicken.isPlaying)
                 {
                     Debug.Log("Playing chicken");
@@ -216,19 +232,62 @@ public class ImageTrackingScript : MonoBehaviour
         string name = trackedImage.referenceImage.name;
 
         Vector3 position = trackedImage.transform.position;
-        Debug.Log(name);
         GameObject spawnedObject = spawnedPrefabs[name];
-        Debug.Log(spawnedObject.name);
+        
         //if tracked image tracking state is comparable to tracking
         if (trackedImage.trackingState == TrackingState.Tracking)
         {
             //set the image tracked ar object to active 
+            if (!spawnedObject.activeSelf) {
+                Debug.Log("Showing " + spawnedObject.name);
+            }
+            
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
         }
         else //if tracked image tracking state is limited or none 
         {
+            if (spawnedObject.activeSelf)
+            {
+                Debug.Log("Hiding " + spawnedObject.name);
+            }
+            spawnedObject.SetActive(false);
+        }
+    }
+
+    private void UpdateCookieObject(ARTrackedImage trackedImage)
+    {
+        string name = trackedImage.referenceImage.name;
+
+        Vector3 position = trackedImage.transform.position;
+        GameObject spawnedObject;
+        if (cookieEaten) {
+            spawnedObject = fortuneCookie;
+        } else {
+            spawnedObject = spawnedPrefabs[name];
+        }
+        
+        
+        //if tracked image tracking state is comparable to tracking
+        if (trackedImage.trackingState == TrackingState.Tracking)
+        {
+            //set the image tracked ar object to active 
+            if (!spawnedObject.activeSelf) {
+                Debug.Log("Showing " + spawnedObject.name);
+            }
+            cookieActive = true;
+            spawnedObject.SetActive(true);
+            spawnedObject.transform.position = trackedImage.transform.position;
+            spawnedObject.transform.rotation = trackedImage.transform.localRotation;
+        }
+        else //if tracked image tracking state is limited or none 
+        {
+            if (spawnedObject.activeSelf)
+            {
+                Debug.Log("Hiding " + spawnedObject.name);
+            }
+            cookieActive = false;
             spawnedObject.SetActive(false);
         }
     }
@@ -274,6 +333,18 @@ public class ImageTrackingScript : MonoBehaviour
         if (takingAway == false && (seconds > 0 || minutes > 0))
         {
             StartCoroutine(TimerTake());
+        }
+
+        if (!cookieEaten)
+        {
+            if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
+            {
+                if (cookieActive && !cookieEaten)
+                {
+                    cookieEaten = true;
+                    spawnedPrefabs["cookie"].SetActive(false);
+                }
+            }
         }
     }
 
