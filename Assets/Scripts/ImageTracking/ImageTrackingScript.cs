@@ -36,6 +36,8 @@ public class ImageTrackingScript : MonoBehaviour
     private bool cookieEaten = false;
     private bool cookieActive = true;
 
+    private bool safeSpawned = true;
+
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
     string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI", "Maze"};
@@ -131,6 +133,9 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 UpdateCookieObject(updatedImage);
             }
+            else if (name == "safe") {
+                UpdateSafe(updatedImage);
+            }
             else
             {
                 UpdateImage(updatedImage);
@@ -168,6 +173,24 @@ public class ImageTrackingScript : MonoBehaviour
         Debug.Log("Found " + name);
         Vector3 position = trackedImage.transform.position;
         SpawnPrefab(name, position);
+
+
+    }
+
+        private void UpdateSafe(ARTrackedImage trackedImage)
+    {
+        string name = trackedImage.referenceImage.name;
+        
+
+        if (trackedImage.trackingState == TrackingState.Tracking && !safeSpawned)
+        {
+            GameObject spawnedObject = spawnedPrefabs[name];
+            Debug.Log("Showing " + name);
+            spawnedObject.SetActive(true);
+            spawnedObject.transform.position = trackedImage.transform.position;
+            spawnedObject.transform.rotation = trackedImage.transform.localRotation;
+            safeSpawned = true;
+        }
 
 
     }

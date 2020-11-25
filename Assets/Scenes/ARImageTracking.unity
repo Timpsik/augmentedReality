@@ -644,6 +644,7 @@ MonoBehaviour:
   - {fileID: 7278177023618748312, guid: 9e8a296070f80514e9f11a9f7e3bf8cd, type: 3}
   - {fileID: 4777320052927102998, guid: 3d70e9b5137149441a25387723d4536f, type: 3}
   - {fileID: 6814111655764520897, guid: 9c686b574aaee9a42b44c5bd71ec4951, type: 3}
+  - {fileID: 7050410813028530726, guid: 44cf3e06380803d45b0fb37b4e81d3b8, type: 3}
   timer: {fileID: 1548305174}
   arCamera: {fileID: 1047431912}
   morseCode: {fileID: 1062975541}
@@ -771,6 +772,8 @@ GameObject:
   - component: {fileID: 1047431914}
   - component: {fileID: 1047431913}
   - component: {fileID: 1047431917}
+  - component: {fileID: 1047431919}
+  - component: {fileID: 1047431918}
   m_Layer: 0
   m_Name: AR Camera
   m_TagString: Untagged
@@ -894,6 +897,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!65 &1047431918
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047431911}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.01, y: 0.01, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1047431919
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047431911}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1062975539
 PrefabInstance:
   m_ObjectHideFlags: 0
