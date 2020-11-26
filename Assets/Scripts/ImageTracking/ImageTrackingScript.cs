@@ -27,16 +27,27 @@ public class ImageTrackingScript : MonoBehaviour
     private AudioSource chicken;
 
         [SerializeField]
+    private AudioSource policeSiren;
+
+        [SerializeField]
     private GameObject fortuneCookie;
 
     private int minutes = 60;
     private int seconds = 0;
+
+    private int minutesTaken = 0;
+
+    private int secondsTaken = 0;
     private bool takingAway = false;
+
+    private bool addingTime = false;
 
     private bool cookieEaten = false;
     private bool cookieActive = true;
 
     private bool safeSpawned = true;
+
+    private bool timeTicking = true;
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
@@ -186,10 +197,13 @@ public class ImageTrackingScript : MonoBehaviour
         {
             GameObject spawnedObject = spawnedPrefabs[name];
             Debug.Log("Showing " + name);
+            TextMeshProUGUI text = spawnedObject.transform.Find("FinalRoom/room/TakenTime").GetComponent<TextMeshProUGUI>();
+            text.text = "It took you " + minutesTaken + ":" + secondsTaken;
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
             safeSpawned = true;
+            timeTicking = false;
         }
 
 
@@ -331,15 +345,34 @@ public class ImageTrackingScript : MonoBehaviour
         }
         if (seconds == 0 && minutes == 0)
         {
-            timer.text = "You died";
-            timer.fontSize = 100;
-            timer.enabled = true;
+            TextAlert.Show("You were captured, but you can keep on playing");
+            timeTicking = false;
+            policeSiren.Stop(); 
+            timer.text = "00:00" ;
+            //timer.fontSize = 100;
+            //timer.enabled = true;
         }
         else
         {
             timer.text = GetTimeString(minutes) + ":" + GetTimeString(seconds);
             takingAway = false;
         }
+    }
+
+    
+    IEnumerator TimerIncrease()
+    {
+        addingTime = true;
+        yield return new WaitForSecondsRealtime(1);
+        if (secondsTaken != 59)
+        {
+            secondsTaken += 1;
+        }
+        else {
+            minutesTaken++;
+            secondsTaken = 0;
+        }
+            addingTime = false;
     }
 
     private string GetTimeString(int time)
@@ -353,9 +386,22 @@ public class ImageTrackingScript : MonoBehaviour
 
     void Update()
     {
-        if (takingAway == false && (seconds > 0 || minutes > 0))
+        if (!takingAway && timeTicking && (seconds > 0 || minutes > 0))
         {
             StartCoroutine(TimerTake());
+        }
+
+        if (!addingTime && timeTicking) {
+            StartCoroutine(TimerIncrease());
+        }
+
+        if (minutes < 1 && policeSiren.volume != 1f) {
+            policeSiren.volume = 1;
+        } else if ( minutes < 5 && policeSiren.volume != 0.5f) {
+            policeSiren.volume = 0.5f;
+        }
+        else if (minutes < 10 && !policeSiren.isPlaying && timeTicking) {
+            policeSiren.Play();
         }
 
         if (!cookieEaten)
