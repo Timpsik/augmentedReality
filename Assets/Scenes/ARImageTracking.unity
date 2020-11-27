@@ -710,17 +710,17 @@ PrefabInstance:
     - target: {fileID: 5560807326082239190, guid: 2f99ee0c24061e74598a35e95b5a637c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.307648
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5560807326082239190, guid: 2f99ee0c24061e74598a35e95b5a637c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.0172396
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5560807326082239190, guid: 2f99ee0c24061e74598a35e95b5a637c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.877164
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5560807326082239190, guid: 2f99ee0c24061e74598a35e95b5a637c,
         type: 3}
@@ -762,6 +762,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5560807326082239191, guid: 2f99ee0c24061e74598a35e95b5a637c,
+        type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 3fd30864c21c7f749914e18494379bba,
+        type: 3}
     - target: {fileID: 5560807326082239192, guid: 2f99ee0c24061e74598a35e95b5a637c,
         type: 3}
       propertyPath: m_Name
