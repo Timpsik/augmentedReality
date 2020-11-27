@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.UI;
 using TMPro;
 
 public class ImageTrackingScript : MonoBehaviour
@@ -17,7 +18,7 @@ public class ImageTrackingScript : MonoBehaviour
     private TextMeshProUGUI timer;
 
     [SerializeField]
-    private Camera arCamera; 
+    private Camera arCamera;
     private ARTrackedImageManager _arTrackedImageManager;
 
     [SerializeField]
@@ -26,15 +27,19 @@ public class ImageTrackingScript : MonoBehaviour
     [SerializeField]
     private AudioSource chicken;
 
-        [SerializeField]
+    [SerializeField]
     private AudioSource policeSiren;
 
-            [SerializeField]
+    [SerializeField]
     private AudioSource cookieCrisp;
 
-        [SerializeField]
+    [SerializeField]
     private GameObject fortuneCookie;
 
+    [SerializeField]
+    private GameObject mazeOverlay;
+
+    public Text mazeEnteredDirections;
     private int minutes = 60;
     private int seconds = 0;
 
@@ -52,10 +57,21 @@ public class ImageTrackingScript : MonoBehaviour
 
     private bool timeTicking = true;
 
+    private bool mazeSolved = false;
+
+    private ArrayList mazeSolution = new ArrayList() {
+        "L","D","R","D","L","D","R","D","R","D"
+    };
+
+    private string mazeDirectionString = "";
+    private int mazeDirectionIndex = 0;
+
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
-    string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI", "Maze"};
+    string[] monarchs = { "Caesar", "ElizabethII", "HenryVII", "JamesVI", "WilliamI" };
     string[] maps = { "Netherlands", "Japan", "SouthAfrica", "Morocco" };
+
+    ArrayList countries_visted = new ArrayList();
     string currentCountry = "Netherlands";
 
     private void Awake()
@@ -64,6 +80,7 @@ public class ImageTrackingScript : MonoBehaviour
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         Debug.Log("Unity script is awoken");
         timer.enabled = false;
+        mazeOverlay.gameObject.SetActive(false);
         foreach (GameObject prefab in placablePrefabs)
         {
             GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
@@ -109,6 +126,21 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 CheckMapOrder(addedImage);
             }
+            else if (name == "Maze")
+            {
+                if (mazeSolved)
+                {
+                    UpdateTemporaryObject(addedImage);
+                }
+            }
+            else if (name == "Lock")
+            {
+                if (!mazeSolved && addedImage.trackingState == TrackingState.Tracking)
+                {
+                    mazeOverlay.gameObject.SetActive(true);
+                    getDirectionInput();
+                }
+            }
             else if (monarchs.Contains(name))
             {
                 UpdateTemporaryObject(addedImage);
@@ -136,6 +168,21 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 UpdateTimerDisplay(updatedImage);
             }
+            else if (name == "Maze")
+            {
+                if (mazeSolved)
+                {
+                    UpdateTemporaryObject(updatedImage);
+                }
+            }
+            else if (name == "Lock")
+            {
+                if (!mazeSolved && updatedImage.trackingState == TrackingState.Tracking)
+                {
+                    mazeOverlay.gameObject.SetActive(true);
+                    getDirectionInput();
+                }
+            }
             else if (maps.Contains(name))
             {
                 CheckMapOrder(updatedImage);
@@ -148,7 +195,8 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 UpdateCookieObject(updatedImage);
             }
-            else if (name == "safe") {
+            else if (name == "safe")
+            {
                 UpdateSafe(updatedImage);
             }
             else
@@ -165,25 +213,73 @@ public class ImageTrackingScript : MonoBehaviour
         }
     }
 
+    private void getDirectionInput()
+    {
+        /* foreach (Button but in mazeOverlay.GetComponentsInChildren<Button>()) {
+             but.ad {
+
+             }
+         }*/
+
+
+    }
+
+    public void DirectionButtonPressed(string direction)
+    {
+        Debug.Log("Button " + direction + " pressed");
+        if (direction.Equals(mazeSolution[mazeDirectionIndex]))
+        {
+           
+            mazeDirectionString += direction + " ";
+            if (mazeDirectionIndex == mazeSolution.Count -1) {
+                mazeSolved = true;
+                mazeOverlay.gameObject.SetActive(false);
+                return;
+            } else {
+                 mazeDirectionIndex++;
+            }
+        }
+        else
+        {
+            mazeDirectionIndex = 0;
+            mazeDirectionString = "";
+        }
+        mazeEnteredDirections.text = mazeDirectionString;
+
+    }
+
+    public void CloseButtonPressed()
+    {
+        Debug.Log("Close pressed");
+        mazeOverlay.gameObject.SetActive(false);
+        mazeDirectionIndex = 0;
+        mazeDirectionString = "";
+    }
+
     private void CheckMapOrder(ARTrackedImage addedImage)
     {
-        
-     /*   if (addedImage.referenceImage.name == currentCountry)
+        string foundCountry = addedImage.referenceImage.name;
+
+        if (foundCountry == currentCountry)
         {
-            Debug.Log("I'm in country: " + addedImage.referenceImage.name);
-            int index = Array.IndexOf(maps, name);
-            if (index == (maps.Length - 1))
+            countries_visted.Add(foundCountry);
+            if (countries_visted.Count < maps.Length)
             {
-                SpawnPrefab("Symbol", addedImage.transform.position,  addedImage.transform.rotation);
+                int counter = Array.IndexOf(maps, foundCountry);
+                currentCountry = maps[counter + 1];
             }
             else
             {
-                Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
-                SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
-                currentCountry = maps[index + 1];
+                UpdateSafe(addedImage);
+                currentCountry = "Finshed";
             }
-        }*/
-        SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
+        }
+        else if (countries_visted.Contains(foundCountry))
+        {
+            Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
+            SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
+        }
+
     }
 
     private void UpdateImage(ARTrackedImage trackedImage)
@@ -196,10 +292,10 @@ public class ImageTrackingScript : MonoBehaviour
 
     }
 
-        private void UpdateSafe(ARTrackedImage trackedImage)
+    private void UpdateSafe(ARTrackedImage trackedImage)
     {
         string name = trackedImage.referenceImage.name;
-        
+
 
         if (trackedImage.trackingState == TrackingState.Tracking && !safeSpawned)
         {
@@ -212,6 +308,7 @@ public class ImageTrackingScript : MonoBehaviour
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
             safeSpawned = true;
             timeTicking = false;
+            policeSiren.Stop();
         }
 
 
@@ -221,10 +318,10 @@ public class ImageTrackingScript : MonoBehaviour
     {
 
         GameObject prefab = spawnedPrefabs[name];
-            prefab.transform.position = position;
-             prefab.transform.rotation = rotation;
-            prefab.SetActive(true);
-        
+        prefab.transform.position = position;
+        prefab.transform.rotation = rotation;
+        prefab.SetActive(true);
+
     }
 
     private void UpdateSound(ARTrackedImage trackedImage)
@@ -281,15 +378,15 @@ public class ImageTrackingScript : MonoBehaviour
 
         Vector3 position = trackedImage.transform.position;
         GameObject spawnedObject = spawnedPrefabs[name];
-        
         //if tracked image tracking state is comparable to tracking
         if (trackedImage.trackingState == TrackingState.Tracking)
         {
             //set the image tracked ar object to active 
-            if (!spawnedObject.activeSelf) {
+            if (!spawnedObject.activeSelf)
+            {
                 Debug.Log("Showing " + spawnedObject.name);
             }
-            
+
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
@@ -310,18 +407,22 @@ public class ImageTrackingScript : MonoBehaviour
 
         Vector3 position = trackedImage.transform.position;
         GameObject spawnedObject;
-        if (cookieEaten) {
+        if (cookieEaten)
+        {
             spawnedObject = fortuneCookie;
-        } else {
+        }
+        else
+        {
             spawnedObject = spawnedPrefabs[name];
         }
-        
-        
+
+
         //if tracked image tracking state is comparable to tracking
         if (trackedImage.trackingState == TrackingState.Tracking)
         {
             //set the image tracked ar object to active 
-            if (!spawnedObject.activeSelf) {
+            if (!spawnedObject.activeSelf)
+            {
                 Debug.Log("Showing " + spawnedObject.name);
             }
             cookieActive = true;
@@ -358,8 +459,8 @@ public class ImageTrackingScript : MonoBehaviour
         {
             TextAlert.Show("You were captured, but you can keep on playing");
             timeTicking = false;
-            policeSiren.Stop(); 
-            timer.text = "00:00" ;
+            policeSiren.Stop();
+            timer.text = "00:00";
             //timer.fontSize = 100;
             //timer.enabled = true;
         }
@@ -370,7 +471,7 @@ public class ImageTrackingScript : MonoBehaviour
         }
     }
 
-    
+
     IEnumerator TimerIncrease()
     {
         addingTime = true;
@@ -379,11 +480,12 @@ public class ImageTrackingScript : MonoBehaviour
         {
             secondsTaken += 1;
         }
-        else {
+        else
+        {
             minutesTaken++;
             secondsTaken = 0;
         }
-            addingTime = false;
+        addingTime = false;
     }
 
     private string GetTimeString(int time)
@@ -402,16 +504,21 @@ public class ImageTrackingScript : MonoBehaviour
             StartCoroutine(TimerTake());
         }
 
-        if (!addingTime && timeTicking) {
+        if (!addingTime && timeTicking)
+        {
             StartCoroutine(TimerIncrease());
         }
 
-        if (minutes < 1 && policeSiren.volume != 1f) {
+        if (minutes < 1 && policeSiren.volume != 1f)
+        {
             policeSiren.volume = 1;
-        } else if ( minutes < 5 && policeSiren.volume != 0.5f) {
+        }
+        else if (minutes < 5 && policeSiren.volume != 0.5f)
+        {
             policeSiren.volume = 0.5f;
         }
-        else if (minutes < 10 && !policeSiren.isPlaying && timeTicking) {
+        else if (minutes < 10 && !policeSiren.isPlaying && timeTicking)
+        {
             policeSiren.Play();
         }
 
@@ -419,9 +526,9 @@ public class ImageTrackingScript : MonoBehaviour
         {
             if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
             {
-                    cookieEaten = true;
-                    cookieCrisp.Play();
-                    spawnedPrefabs["cookie"].SetActive(false);
+                cookieEaten = true;
+                cookieCrisp.Play();
+                spawnedPrefabs["cookie"].SetActive(false);
             }
         }
     }

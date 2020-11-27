@@ -69,9 +69,9 @@ MonoBehaviour:
       m_GuidLow: 4949755512380115444
       m_GuidHigh: 1050899609481328285
     m_SerializedTextureGuid:
-      m_GuidLow: 8472483959520327994
-      m_GuidHigh: 7393901514726142170
-    m_Size: {x: 0.2, y: 0.20149253}
+      m_GuidLow: 8008805131551062379
+      m_GuidHigh: 884461675538122346
+    m_Size: {x: 0.2, y: 0.11861272}
     m_SpecifySize: 1
     m_Name: Maze
     m_Texture: {fileID: 0}
@@ -189,9 +189,9 @@ MonoBehaviour:
       m_GuidLow: 4765130363954994563
       m_GuidHigh: 7167320052534294428
     m_SerializedTextureGuid:
-      m_GuidLow: 8368962190386847155
-      m_GuidHigh: 3033933614596869097
-    m_Size: {x: 0.2, y: 0.23063064}
+      m_GuidLow: 1172227296470900536
+      m_GuidHigh: 174243048159070154
+    m_Size: {x: 0.2, y: 0.2}
     m_SpecifySize: 1
-    m_Name: safe
+    m_Name: Lock
     m_Texture: {fileID: 0}
