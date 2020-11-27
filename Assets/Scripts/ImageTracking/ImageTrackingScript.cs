@@ -17,21 +17,9 @@ public class ImageTrackingScript : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI timer;
 
-    [SerializeField]
-    private Camera arCamera;
     private ARTrackedImageManager _arTrackedImageManager;
 
-    [SerializeField]
-    private AudioSource morseCode;
-
-    [SerializeField]
-    private AudioSource chicken;
-
-    [SerializeField]
-    private AudioSource policeSiren;
-
-    [SerializeField]
-    private AudioSource cookieCrisp;
+    private AudioController audioController;
 
     [SerializeField]
     private GameObject fortuneCookie;
@@ -43,17 +31,14 @@ public class ImageTrackingScript : MonoBehaviour
     private int minutes = 60;
     private int seconds = 0;
 
-    private int minutesTaken = 0;
-
     private int secondsTaken = 0;
     private bool takingAway = false;
 
     private bool addingTime = false;
 
     private bool cookieEaten = false;
-    private bool cookieActive = false;
 
-    private bool safeSpawned = true;
+    private bool safeSpawned = false;
 
     private bool timeTicking = true;
 
@@ -78,6 +63,7 @@ public class ImageTrackingScript : MonoBehaviour
     {
 
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
+        audioController = GetComponent<AudioController>();
         Debug.Log("Unity script is awoken");
         timer.enabled = false;
         mazeOverlay.gameObject.SetActive(false);
@@ -101,9 +87,7 @@ public class ImageTrackingScript : MonoBehaviour
     public void OnDisable()
     {
         _arTrackedImageManager.trackedImagesChanged -= OnImageChanged;
-        morseCode.Stop();
-        chicken.Stop();
-        policeSiren.Stop();
+        audioController.StopAllAudio();
     }
 
     public void OnImageChanged(ARTrackedImagesChangedEventArgs args)
@@ -138,7 +122,6 @@ public class ImageTrackingScript : MonoBehaviour
                 if (!mazeSolved && addedImage.trackingState == TrackingState.Tracking)
                 {
                     mazeOverlay.gameObject.SetActive(true);
-                    getDirectionInput();
                 }
             }
             else if (monarchs.Contains(name))
@@ -180,7 +163,6 @@ public class ImageTrackingScript : MonoBehaviour
                 if (!mazeSolved && updatedImage.trackingState == TrackingState.Tracking)
                 {
                     mazeOverlay.gameObject.SetActive(true);
-                    getDirectionInput();
                 }
             }
             else if (maps.Contains(name))
@@ -213,30 +195,23 @@ public class ImageTrackingScript : MonoBehaviour
         }
     }
 
-    private void getDirectionInput()
-    {
-        /* foreach (Button but in mazeOverlay.GetComponentsInChildren<Button>()) {
-             but.ad {
-
-             }
-         }*/
-
-
-    }
-
     public void DirectionButtonPressed(string direction)
     {
         Debug.Log("Button " + direction + " pressed");
         if (direction.Equals(mazeSolution[mazeDirectionIndex]))
         {
-           
+
             mazeDirectionString += direction + " ";
-            if (mazeDirectionIndex == mazeSolution.Count -1) {
+            if (mazeDirectionIndex == mazeSolution.Count - 1)
+            {
                 mazeSolved = true;
+                audioController.StartAudio(AudioPlayer.Lock);
                 mazeOverlay.gameObject.SetActive(false);
                 return;
-            } else {
-                 mazeDirectionIndex++;
+            }
+            else
+            {
+                mazeDirectionIndex++;
             }
         }
         else
@@ -267,11 +242,16 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 int counter = Array.IndexOf(maps, foundCountry);
                 currentCountry = maps[counter + 1];
+                audioController.StartAudio(AudioPlayer.Plane);
             }
             else
             {
+                audioController.StartAudio(AudioPlayer.Plane);
                 UpdateSafe(addedImage);
-                currentCountry = "Finshed";
+                currentCountry = "Finished";
+                safeSpawned = true;
+                timeTicking = false;
+                audioController.StopAudio(AudioPlayer.Police);
             }
         }
         else if (countries_visted.Contains(foundCountry))
@@ -302,13 +282,13 @@ public class ImageTrackingScript : MonoBehaviour
             GameObject spawnedObject = spawnedPrefabs[name];
             Debug.Log("Showing " + name);
             TextMeshProUGUI text = spawnedObject.transform.Find("FinalRoom/room/TakenTime").GetComponent<TextMeshProUGUI>();
-            text.text = "It took you " + minutesTaken + ":" + secondsTaken;
+            //text.text = "It took you " + minutesTaken + ":" + secondsTaken;
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
             safeSpawned = true;
             timeTicking = false;
-            policeSiren.Stop();
+            audioController.StopAudio(AudioPlayer.Police);
         }
 
 
@@ -332,21 +312,11 @@ public class ImageTrackingScript : MonoBehaviour
             //deactivate the image tracked ar object 
             if (trackedImage.referenceImage.name == "Phone")
             {
-
-                if (morseCode.isPlaying)
-                {
-                    Debug.Log("Stopping morse");
-                    morseCode.Stop();
-                }
+                audioController.StopAudio(AudioPlayer.Morse);
             }
             else
             {
-
-                if (chicken.isPlaying)
-                {
-                    Debug.Log("Stopping chicken");
-                    chicken.Stop();
-                }
+                audioController.StopAudio(AudioPlayer.Chicken);
             }
 
 
@@ -355,19 +325,11 @@ public class ImageTrackingScript : MonoBehaviour
         {
             if (trackedImage.referenceImage.name == "Phone")
             {
-                if (!morseCode.isPlaying)
-                {
-                    Debug.Log("Playing morse");
-                    morseCode.Play();
-                }
+                audioController.StartAudio(AudioPlayer.Morse);
             }
             else
             {
-                if (!chicken.isPlaying)
-                {
-                    Debug.Log("Playing chicken");
-                    chicken.Play();
-                }
+                audioController.StartAudio(AudioPlayer.Chicken);
             }
         }
     }
@@ -425,7 +387,6 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 Debug.Log("Showing " + spawnedObject.name);
             }
-            cookieActive = true;
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
@@ -436,7 +397,6 @@ public class ImageTrackingScript : MonoBehaviour
             {
                 Debug.Log("Hiding " + spawnedObject.name);
             }
-            cookieActive = false;
             spawnedObject.SetActive(false);
         }
     }
@@ -459,7 +419,7 @@ public class ImageTrackingScript : MonoBehaviour
         {
             TextAlert.Show("You were captured, but you can keep on playing");
             timeTicking = false;
-            policeSiren.Stop();
+            audioController.StopAudio(AudioPlayer.Police);
             timer.text = "00:00";
             //timer.fontSize = 100;
             //timer.enabled = true;
@@ -476,15 +436,8 @@ public class ImageTrackingScript : MonoBehaviour
     {
         addingTime = true;
         yield return new WaitForSecondsRealtime(1);
-        if (secondsTaken != 59)
-        {
-            secondsTaken += 1;
-        }
-        else
-        {
-            minutesTaken++;
-            secondsTaken = 0;
-        }
+
+        secondsTaken++;
         addingTime = false;
     }
 
@@ -509,25 +462,25 @@ public class ImageTrackingScript : MonoBehaviour
             StartCoroutine(TimerIncrease());
         }
 
-        if (minutes < 1 && policeSiren.volume != 1f)
+        if (minutes < 1)
         {
-            policeSiren.volume = 1;
+            audioController.ChangeAudioVolume(AudioPlayer.Police, 0.8f);
         }
-        else if (minutes < 5 && policeSiren.volume != 0.5f)
+        else if (minutes < 5)
         {
-            policeSiren.volume = 0.5f;
+            audioController.ChangeAudioVolume(AudioPlayer.Police, 0.15f);
         }
-        else if (minutes < 10 && !policeSiren.isPlaying && timeTicking)
+        else if (minutes < 10 && timeTicking)
         {
-            policeSiren.Play();
+            audioController.StartAudio(AudioPlayer.Police);
         }
 
-        if (!cookieEaten && cookieActive)
+        if (!cookieEaten && spawnedPrefabs["cookie"].activeSelf)
         {
             if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
             {
                 cookieEaten = true;
-                cookieCrisp.Play();
+                audioController.StartAudio(AudioPlayer.Cookie);
                 spawnedPrefabs["cookie"].SetActive(false);
             }
         }
