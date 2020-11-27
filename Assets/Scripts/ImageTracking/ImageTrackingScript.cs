@@ -29,6 +29,9 @@ public class ImageTrackingScript : MonoBehaviour
         [SerializeField]
     private AudioSource policeSiren;
 
+            [SerializeField]
+    private AudioSource cookieCrisp;
+
         [SerializeField]
     private GameObject fortuneCookie;
 
@@ -43,7 +46,7 @@ public class ImageTrackingScript : MonoBehaviour
     private bool addingTime = false;
 
     private bool cookieEaten = false;
-    private bool cookieActive = true;
+    private bool cookieActive = false;
 
     private bool safeSpawned = true;
 
@@ -83,6 +86,7 @@ public class ImageTrackingScript : MonoBehaviour
         _arTrackedImageManager.trackedImagesChanged -= OnImageChanged;
         morseCode.Stop();
         chicken.Stop();
+        policeSiren.Stop();
     }
 
     public void OnImageChanged(ARTrackedImagesChangedEventArgs args)
@@ -411,15 +415,13 @@ public class ImageTrackingScript : MonoBehaviour
             policeSiren.Play();
         }
 
-        if (!cookieEaten)
+        if (!cookieEaten && cookieActive)
         {
             if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
             {
-                if (cookieActive && !cookieEaten)
-                {
                     cookieEaten = true;
+                    cookieCrisp.Play();
                     spawnedPrefabs["cookie"].SetActive(false);
-                }
             }
         }
     }
