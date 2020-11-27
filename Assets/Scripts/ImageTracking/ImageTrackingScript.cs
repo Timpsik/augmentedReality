@@ -14,12 +14,11 @@ public class ImageTrackingScript : MonoBehaviour
     [SerializeField]
     private GameObject[] placablePrefabs;
 
-    [SerializeField]
-    private TextMeshProUGUI timer;
-
     private ARTrackedImageManager _arTrackedImageManager;
 
     private AudioController audioController;
+
+    private TimerController timerController;
 
     [SerializeField]
     private GameObject fortuneCookie;
@@ -28,19 +27,11 @@ public class ImageTrackingScript : MonoBehaviour
     private GameObject mazeOverlay;
 
     public Text mazeEnteredDirections;
-    private int minutes = 60;
-    private int seconds = 0;
 
-    private int secondsTaken = 0;
-    private bool takingAway = false;
-
-    private bool addingTime = false;
 
     private bool cookieEaten = false;
 
     private bool safeSpawned = false;
-
-    private bool timeTicking = true;
 
     private bool mazeSolved = false;
 
@@ -64,8 +55,8 @@ public class ImageTrackingScript : MonoBehaviour
 
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         audioController = GetComponent<AudioController>();
+        timerController = GetComponent<TimerController>();
         Debug.Log("Unity script is awoken");
-        timer.enabled = false;
         mazeOverlay.gameObject.SetActive(false);
         foreach (GameObject prefab in placablePrefabs)
         {
@@ -250,7 +241,7 @@ public class ImageTrackingScript : MonoBehaviour
                 UpdateSafe(addedImage);
                 currentCountry = "Finished";
                 safeSpawned = true;
-                timeTicking = false;
+                timerController.StopTicking();
                 audioController.StopAudio(AudioPlayer.Police);
             }
         }
@@ -287,7 +278,7 @@ public class ImageTrackingScript : MonoBehaviour
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;
             safeSpawned = true;
-            timeTicking = false;
+            timerController.StopTicking();
             audioController.StopAudio(AudioPlayer.Police);
         }
 
@@ -401,80 +392,8 @@ public class ImageTrackingScript : MonoBehaviour
         }
     }
 
-
-    IEnumerator TimerTake()
-    {
-        takingAway = true;
-        yield return new WaitForSecondsRealtime(1);
-        if (seconds != 0)
-        {
-            seconds -= 1;
-        }
-        else if (minutes > 0)
-        {
-            minutes -= 1;
-            seconds = 59;
-        }
-        if (seconds == 0 && minutes == 0)
-        {
-            TextAlert.Show("You were captured, but you can keep on playing");
-            timeTicking = false;
-            audioController.StopAudio(AudioPlayer.Police);
-            timer.text = "00:00";
-            //timer.fontSize = 100;
-            //timer.enabled = true;
-        }
-        else
-        {
-            timer.text = GetTimeString(minutes) + ":" + GetTimeString(seconds);
-            takingAway = false;
-        }
-    }
-
-
-    IEnumerator TimerIncrease()
-    {
-        addingTime = true;
-        yield return new WaitForSecondsRealtime(1);
-
-        secondsTaken++;
-        addingTime = false;
-    }
-
-    private string GetTimeString(int time)
-    {
-        if (time < 10)
-        {
-            return "0" + time;
-        }
-        return "" + time;
-    }
-
     void Update()
     {
-        if (!takingAway && timeTicking && (seconds > 0 || minutes > 0))
-        {
-            StartCoroutine(TimerTake());
-        }
-
-        if (!addingTime && timeTicking)
-        {
-            StartCoroutine(TimerIncrease());
-        }
-
-        if (minutes < 1)
-        {
-            audioController.ChangeAudioVolume(AudioPlayer.Police, 0.8f);
-        }
-        else if (minutes < 5)
-        {
-            audioController.ChangeAudioVolume(AudioPlayer.Police, 0.15f);
-        }
-        else if (minutes < 10 && timeTicking)
-        {
-            audioController.StartAudio(AudioPlayer.Police);
-        }
-
         if (!cookieEaten && spawnedPrefabs["cookie"].activeSelf)
         {
             if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
@@ -491,16 +410,13 @@ public class ImageTrackingScript : MonoBehaviour
         if (trackedImage.trackingState != TrackingState.Tracking)
         {
             // hide the countdown timer
-            if (seconds > 0 || minutes > 0)
-            {
-                timer.enabled = false;
-            }
+            timerController.HideTimeLeft();
 
         }
         else if (trackedImage.trackingState == TrackingState.Tracking)
         {
             // show the countdown timer
-            timer.enabled = true;
+            timerController.ShowTimeLeft();
         }
     }
 

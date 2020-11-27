@@ -1305,6 +1305,7 @@ GameObject:
   - component: {fileID: 681710751}
   - component: {fileID: 681710750}
   - component: {fileID: 681710752}
+  - component: {fileID: 681710753}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -1397,7 +1398,6 @@ MonoBehaviour:
   - {fileID: 4777320052927102998, guid: 3d70e9b5137149441a25387723d4536f, type: 3}
   - {fileID: 6814111655764520897, guid: 9c686b574aaee9a42b44c5bd71ec4951, type: 3}
   - {fileID: 7050410813028530726, guid: 44cf3e06380803d45b0fb37b4e81d3b8, type: 3}
-  timer: {fileID: 1548305174}
   fortuneCookie: {fileID: 7850380286740694191, guid: d9581c48624e92b44ab31987809f996f,
     type: 3}
   mazeOverlay: {fileID: 1651027763}
@@ -1420,6 +1420,19 @@ MonoBehaviour:
   cookieCrisp: {fileID: 1210703354}
   directionLock: {fileID: 437320185}
   plane: {fileID: 782117909}
+--- !u!114 &681710753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681710746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e7af5ef147317e47ade0dbd6ae63b59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: {fileID: 1548305174}
 --- !u!1 &782117907
 GameObject:
   m_ObjectHideFlags: 0
