@@ -56,6 +56,7 @@ public class ImageTrackingScript : MonoBehaviour
         _arTrackedImageManager = FindObjectOfType<ARTrackedImageManager>();
         audioController = GetComponent<AudioController>();
         timerController = GetComponent<TimerController>();
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Debug.Log("Unity script is awoken");
         mazeOverlay.gameObject.SetActive(false);
         foreach (GameObject prefab in placablePrefabs)
