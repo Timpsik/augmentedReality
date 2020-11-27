@@ -553,6 +553,7 @@ GameObject:
   - component: {fileID: 681710749}
   - component: {fileID: 681710751}
   - component: {fileID: 681710750}
+  - component: {fileID: 681710752}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -652,6 +653,18 @@ MonoBehaviour:
   policeSiren: {fileID: 1011465843}
   fortuneCookie: {fileID: 7850380286740694191, guid: d9581c48624e92b44ab31987809f996f,
     type: 3}
+--- !u!114 &681710752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681710746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ca12b767fb97af4f8bbe6f4305cea7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &844075083
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,13 +816,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a3606e36efe638a45a08b1ff0ab85d3f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.2
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 60
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -1062,6 +1075,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 844075084}
     m_Modifications:
+    - target: {fileID: 842658861125045427, guid: 7e5f7bb1f2114c249be88fe09901429c,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 4826938662259418043, guid: 7e5f7bb1f2114c249be88fe09901429c,
         type: 3}
       propertyPath: m_Name

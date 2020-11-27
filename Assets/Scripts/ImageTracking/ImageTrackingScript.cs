@@ -163,19 +163,23 @@ public class ImageTrackingScript : MonoBehaviour
 
     private void CheckMapOrder(ARTrackedImage addedImage)
     {
-        if (addedImage.referenceImage.name == currentCountry)
+        
+     /*   if (addedImage.referenceImage.name == currentCountry)
         {
+            Debug.Log("I'm in country: " + addedImage.referenceImage.name);
             int index = Array.IndexOf(maps, name);
             if (index == (maps.Length - 1))
             {
-                SpawnPrefab("Symbol", addedImage.transform.position);
+                SpawnPrefab("Symbol", addedImage.transform.position,  addedImage.transform.rotation);
             }
             else
             {
-                SpawnPrefab("Plane", addedImage.transform.position);
+                Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
+                SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
                 currentCountry = maps[index + 1];
             }
-        }
+        }*/
+        SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
     }
 
     private void UpdateImage(ARTrackedImage trackedImage)
@@ -183,7 +187,7 @@ public class ImageTrackingScript : MonoBehaviour
         string name = trackedImage.referenceImage.name;
         Debug.Log("Found " + name);
         Vector3 position = trackedImage.transform.position;
-        SpawnPrefab(name, position);
+        SpawnPrefab(name, position, trackedImage.transform.rotation);
 
 
     }
@@ -209,11 +213,14 @@ public class ImageTrackingScript : MonoBehaviour
 
     }
 
-    private void SpawnPrefab(string name, Vector3 position)
+    private void SpawnPrefab(string name, Vector3 position, Quaternion rotation)
     {
+
         GameObject prefab = spawnedPrefabs[name];
-        prefab.transform.position = position;
-        prefab.SetActive(true);
+            prefab.transform.position = position;
+             prefab.transform.rotation = rotation;
+            prefab.SetActive(true);
+        
     }
 
     private void UpdateSound(ARTrackedImage trackedImage)
