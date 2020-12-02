@@ -49,6 +49,7 @@ public class ImageTrackingScript : MonoBehaviour
 
     ArrayList countries_visted = new ArrayList();
     string currentCountry = "Netherlands";
+    private readonly string finalCountry = "Morocco";
 
     private void Awake()
     {
@@ -100,7 +101,7 @@ public class ImageTrackingScript : MonoBehaviour
             }
             else if (maps.Contains(name))
             {
-                CheckMapOrder(addedImage);
+                HandleFoundMap(addedImage);
             }
             else if (name == "Maze")
             {
@@ -159,7 +160,7 @@ public class ImageTrackingScript : MonoBehaviour
             }
             else if (maps.Contains(name))
             {
-                CheckMapOrder(updatedImage);
+                HandleFoundMap(updatedImage);
             }
             else if (monarchs.Contains(name))
             {
@@ -184,6 +185,9 @@ public class ImageTrackingScript : MonoBehaviour
         foreach (var removedImage in args.removed)
         {
             spawnedPrefabs[removedImage.name].SetActive(false);
+            if (maps.Contains(removedImage.referenceImage.name)){
+                spawnedPrefabs["Plane"].SetActive(false);
+            }
         }
     }
 
@@ -223,33 +227,35 @@ public class ImageTrackingScript : MonoBehaviour
         mazeDirectionString = "";
     }
 
-    private void CheckMapOrder(ARTrackedImage addedImage)
+    private void HandleFoundMap(ARTrackedImage addedImage)
     {
         string foundCountry = addedImage.referenceImage.name;
 
         if (foundCountry == currentCountry)
         {
+            Debug.Log("Added " + currentCountry);
+            
             countries_visted.Add(foundCountry);
-            if (countries_visted.Count < maps.Length)
-            {
+            if(foundCountry != finalCountry) { 
                 int counter = Array.IndexOf(maps, foundCountry);
                 currentCountry = maps[counter + 1];
-                audioController.StartAudio(AudioPlayer.Plane);
             }
             else
             {
-                audioController.StartAudio(AudioPlayer.Plane);
-                UpdateSafe(addedImage);
-                currentCountry = "Finished";
-                safeSpawned = true;
-                timerController.StopTicking();
-                audioController.StopAudio(AudioPlayer.Police);
+                currentCountry = "finshed";
             }
         }
-        else if (countries_visted.Contains(foundCountry))
+        if (countries_visted.Contains(foundCountry))
         {
-            Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
-            SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
+            if(foundCountry == finalCountry)
+            {
+                Debug.Log("Spawning safe: " + addedImage.referenceImage.name);
+                UpdateSafe(addedImage);
+            }
+            else { 
+                Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
+                SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
+            }
         }
 
     }
@@ -266,12 +272,11 @@ public class ImageTrackingScript : MonoBehaviour
 
     private void UpdateSafe(ARTrackedImage trackedImage)
     {
-        string name = trackedImage.referenceImage.name;
 
 
         if (trackedImage.trackingState == TrackingState.Tracking && !safeSpawned)
         {
-            GameObject spawnedObject = spawnedPrefabs[name];
+            GameObject spawnedObject = spawnedPrefabs["safe"];
             Debug.Log("Showing " + name);
             TextMeshProUGUI text = spawnedObject.transform.Find("FinalRoom/room/TakenTime").GetComponent<TextMeshProUGUI>();
             //text.text = "It took you " + minutesTaken + ":" + secondsTaken;
