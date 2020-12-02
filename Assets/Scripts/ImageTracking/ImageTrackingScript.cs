@@ -51,6 +51,8 @@ public class ImageTrackingScript : MonoBehaviour
     string currentCountry = "Netherlands";
     private readonly string finalCountry = "Morocco";
 
+    private string planeActivator = "";
+
     private void Awake()
     {
 
@@ -231,33 +233,43 @@ public class ImageTrackingScript : MonoBehaviour
     {
         string foundCountry = addedImage.referenceImage.name;
 
-        if (foundCountry == currentCountry)
+        if (addedImage.trackingState == TrackingState.Tracking)
         {
-            Debug.Log("Added " + currentCountry);
-            
-            countries_visted.Add(foundCountry);
-            if(foundCountry != finalCountry) { 
-                int counter = Array.IndexOf(maps, foundCountry);
-                currentCountry = maps[counter + 1];
-            }
-            else
+            if (foundCountry == currentCountry)
             {
-                currentCountry = "finshed";
-            }
-        }
-        if (countries_visted.Contains(foundCountry))
-        {
-            if(foundCountry == finalCountry)
-            {
-                Debug.Log("Spawning safe: " + addedImage.referenceImage.name);
-                UpdateSafe(addedImage);
-            }
-            else { 
-                Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
-                SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
-            }
-        }
+                Debug.Log("Added " + currentCountry);
 
+                countries_visted.Add(foundCountry);
+                if (foundCountry != finalCountry)
+                {
+                    int counter = Array.IndexOf(maps, foundCountry);
+                    currentCountry = maps[counter + 1];
+                }
+                else
+                {
+                    currentCountry = "finshed";
+                }
+            }
+            if (countries_visted.Contains(foundCountry))
+            {
+                if (foundCountry == finalCountry)
+                {
+                    Debug.Log("Spawning safe: " + addedImage.referenceImage.name);
+                    UpdateSafe(addedImage);
+                }
+                else
+                {
+                    Debug.Log("Spawning plane: " + addedImage.referenceImage.name);
+                    SpawnPrefab("Plane", addedImage.transform.position, addedImage.transform.rotation);
+                    planeActivator = foundCountry;
+                    audioController.StartAudio(AudioPlayer.Plane);
+                }
+            }
+        } else {
+            if (foundCountry == planeActivator && spawnedPrefabs["Plane"].activeSelf) {
+                spawnedPrefabs["Plane"].SetActive(false);
+            }
+        }
     }
 
     private void UpdateImage(ARTrackedImage trackedImage)
@@ -278,8 +290,8 @@ public class ImageTrackingScript : MonoBehaviour
         {
             GameObject spawnedObject = spawnedPrefabs["safe"];
             Debug.Log("Showing " + name);
-            TextMeshProUGUI text = spawnedObject.transform.Find("FinalRoom/room/TakenTime").GetComponent<TextMeshProUGUI>();
-            //text.text = "It took you " + minutesTaken + ":" + secondsTaken;
+            TextMeshPro text = spawnedObject.transform.Find("FinalRoom/room/TakenTime").GetComponent<TextMeshPro>();
+            text.text = "It took you " + timerController.GetTimeTaken();
             spawnedObject.SetActive(true);
             spawnedObject.transform.position = trackedImage.transform.position;
             spawnedObject.transform.rotation = trackedImage.transform.localRotation;

@@ -449,6 +449,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameObject
       objectReference: {fileID: 0}
+    - target: {fileID: 5337184128968690198, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2140649552}
+    - target: {fileID: 5337184128968690198, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Exit
+      objectReference: {fileID: 0}
     - target: {fileID: 5337184128968690199, guid: ebe7a44a9f876b14f80bc21c61322b49,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -478,6 +488,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5337184129256757123, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2140649550}
+    - target: {fileID: 5337184129256757123, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonMoveScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 5337184129450066521, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2140649550}
+    - target: {fileID: 5337184129450066521, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonMoveScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 5337184129450066521, guid: ebe7a44a9f876b14f80bc21c61322b49,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5337184129450066526, guid: ebe7a44a9f876b14f80bc21c61322b49,
         type: 3}

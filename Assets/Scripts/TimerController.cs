@@ -111,8 +111,14 @@ public class TimerController : MonoBehaviour
         timer.enabled = false;
     }
 
-    public void StopTicking() {
+    public void StopTicking()
+    {
         timeTicking = false;
+    }
+
+    public string GetTimeTaken()
+    {
+        return GetTimeString(secondsTaken / 60) + ":" + GetTimeString(secondsTaken % 60);
     }
 
 }
