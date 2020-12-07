@@ -5,31 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/HomeScreen.unity
     guid: f7ade33781f13924980091f2b7c0ab10
   - enabled: 1
     path: Assets/Scenes/ARImageTracking.unity
     guid: 5d0b7d5ec0feea440921c49d3c543fd9
-  - enabled: 0
-    path: Assets/Scenes/VideoOnFace.unity
-    guid: 2c844df718e915c499dfe8da467543af
-  - enabled: 0
-    path: Assets/Scenes/EnterCode.unity
-    guid: a39ccb884b7720f4fa0079582920161e
-  - enabled: 0
-    path: Assets/Scenes/MazeSwitch.unity
-    guid: c4a6775ff7da19340b5ab32fd10e0089
-  - enabled: 0
-    path: Assets/Scenes/EnterDirectionCode.unity
-    guid: 81807d027843c8b449aca74be967e7a3
-  - enabled: 0
-    path: Assets/Scenes/EmptyFrontCamera.unity
-    guid: 8e93928caf7ab4a4a86a46eaf6cdc07e
-  - enabled: 0
-    path: Assets/Scenes/CaesarCipher.unity
-    guid: 4733764aafaf0834bbe21defc8e4346a
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: 3dfe2f8d757f1d045b4e7f10a801cf50
   m_configObjects:

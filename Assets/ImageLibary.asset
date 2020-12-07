@@ -19,9 +19,9 @@ MonoBehaviour:
       m_GuidLow: 5198969203122545849
       m_GuidHigh: 4497443896609519009
     m_SerializedTextureGuid:
-      m_GuidLow: 13908292768543288575
-      m_GuidHigh: 3984799616375674011
-    m_Size: {x: 0.2, y: 0.20140846}
+      m_GuidLow: 4689621265120690748
+      m_GuidHigh: 12886311160213338984
+    m_Size: {x: 0.2, y: 0.2015748}
     m_SpecifySize: 1
     m_Name: Phone
     m_Texture: {fileID: 0}
@@ -79,9 +79,9 @@ MonoBehaviour:
       m_GuidLow: 5075328038602803077
       m_GuidHigh: 10722113532836033431
     m_SerializedTextureGuid:
-      m_GuidLow: 6508828276843853108
-      m_GuidHigh: 12105184461133924282
-    m_Size: {x: 0.2, y: 0.2}
+      m_GuidLow: 5054437939510068812
+      m_GuidHigh: 15149355366075200107
+    m_Size: {x: 0.2, y: 0.30022728}
     m_SpecifySize: 1
     m_Name: Timer
     m_Texture: {fileID: 0}
@@ -159,9 +159,9 @@ MonoBehaviour:
       m_GuidLow: 5504876132797993335
       m_GuidHigh: 6977920213890259895
     m_SerializedTextureGuid:
-      m_GuidLow: 9593863727001395371
-      m_GuidHigh: 16911941880082113768
-    m_Size: {x: 0.2, y: 0.26666668}
+      m_GuidLow: 15556629417469146747
+      m_GuidHigh: 11911166950818391115
+    m_Size: {x: 0.2, y: 0.15}
     m_SpecifySize: 1
     m_Name: Chicken
     m_Texture: {fileID: 0}
@@ -169,9 +169,9 @@ MonoBehaviour:
       m_GuidLow: 5612530341475385842
       m_GuidHigh: 2421840630637932161
     m_SerializedTextureGuid:
-      m_GuidLow: 16006959852342113202
-      m_GuidHigh: 2465967810839945224
-    m_Size: {x: 0.2, y: 0.28529412}
+      m_GuidLow: 16592654607924587640
+      m_GuidHigh: 9083895194907861129
+    m_Size: {x: 0.2, y: 0.25}
     m_SpecifySize: 1
     m_Name: ElizabethII
     m_Texture: {fileID: 0}
@@ -179,9 +179,9 @@ MonoBehaviour:
       m_GuidLow: 4964474300083875004
       m_GuidHigh: 15765052831678344105
     m_SerializedTextureGuid:
-      m_GuidLow: 13219281315984151512
-      m_GuidHigh: 1253258085788225114
-    m_Size: {x: 0.2, y: 0.1975}
+      m_GuidLow: 10715370741247307765
+      m_GuidHigh: 2415210838350206328
+    m_Size: {x: 0.2, y: 0.19921875}
     m_SpecifySize: 1
     m_Name: cookie
     m_Texture: {fileID: 0}
@@ -189,9 +189,9 @@ MonoBehaviour:
       m_GuidLow: 4765130363954994563
       m_GuidHigh: 7167320052534294428
     m_SerializedTextureGuid:
-      m_GuidLow: 1172227296470900536
-      m_GuidHigh: 174243048159070154
-    m_Size: {x: 0.2, y: 0.2}
+      m_GuidLow: 3653633550194716424
+      m_GuidHigh: 3668500533493068523
+    m_Size: {x: 0.2, y: 0.15}
     m_SpecifySize: 1
     m_Name: Lock
     m_Texture: {fileID: 0}
